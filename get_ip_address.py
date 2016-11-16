@@ -57,4 +57,3 @@ def ip_save_file(iptxt):
 if __name__ == '__main__':
     iptxt = get_ip_address()
     ip_save_file(iptxt)          
-    ip_send_mail(iptxt)
