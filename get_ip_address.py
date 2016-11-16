@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-' get ip Address and send to mail <python 2.7>'
-
-__author__ = 'Page Wong'
+#version = python 2.7
+#__author__ = 'Page Wong'
 
 import array
 import struct
