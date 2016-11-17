@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#version = python 2.7
+#version <= python 2.7
 #__author__ = 'Page Wong'
 
 import array
@@ -11,11 +11,10 @@ from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 
-
 def get_ip_address():
-'''
-#获取IP地址功能 
-'''
+    '''
+    #获取IP地址功能# 
+    '''
 
     #先获取所有网络接口
     SIOCGIFCONF = 0x8912
@@ -36,14 +35,15 @@ def get_ip_address():
 
     
 def ip_save_file(iptxt):
-'''
-#存入IP地址到文件
-直接发邮件不需读取次文件
-后续通过其它途径传送IP地址时用到 
-'''
+    '''
+    #存入IP地址到文件#
+    直接发邮件不需读取次文件
+    后续通过其它途径传送IP地址时用到 
+    '''
 
     #获取当前时间，因为每次启动IP都在变，记录上时间容易区分
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
     #写入文件
     with open('ipaddress.txt','w') as f:
         f.write(now+'\r\n')
@@ -52,22 +52,18 @@ def ip_save_file(iptxt):
 
             
 def ip_send_mail(iptxt):
-'''
-#发送IP地址到制定邮箱
-根据自己邮箱设置
-'''
-
-    #设置收件邮箱
-    toaddrs  = 'to@mail.com'
-    #设置发送邮箱
-    fromaddr = 'send@mail.com' 
+    '''
+    #发送IP地址到制定邮箱#
+    '''
+    #导入邮件账户配置文件
+    import config as mail
     
-    #设置发送邮箱的账号密码
-    username = 'your_sendmail@mail.com' 
-    password = 'your_pass'
+    fromaddr = mail.fromaddr
+    toaddrs = mail.toaddrs
+    username = mail.username
+    password = mail.password
+    server = smtplib.SMTP(mail.smtp_sever)
     
-    #设置SMTP服务器、端口，根据你的邮箱设置，
-    server = smtplib.SMTP('smtp.mail.com:25')
     #设置邮件正文，get_ip_address()返回的是list，要转换成str
     ip = '\r\n'.join(iptxt)
     
@@ -84,15 +80,22 @@ def ip_send_mail(iptxt):
     server.sendmail(fromaddr, toaddrs, msg.as_string())
     server.quit()
 
+def main():
+    '''
+    #程序入口#
+    '''
 
-if __name__ == '__main__':
-'''
-#直接运行本脚本
-'''
-    
     #获取IP
     iptxt = get_ip_address()
+    
     #将IP存入文件，如果直接发送邮件，这步可以省略。
-    ip_save_file(iptxt)   
+    ip_save_file(iptxt)
+    
     #将IP地址发送到指定邮箱
     ip_send_mail(iptxt)
+
+if __name__ == '__main__': 
+    '''
+    #运行
+    '''   
+    main()
